@@ -1,4 +1,4 @@
-/2015.08.03 timestamps milli->micro, handle (ignore) additional participant timestamp, RRN, TRF 
+/2015.07.27 timestamps milli->micro, handle (ignore) additional participant timestamp, RRN, TRF 
 / http://www.nyxdata.com/nysedata/default.aspx?tabid=993&id=2784
 /2014.04.28 support additional exchange codes in master (12-15)
 /2014.01.15 discard info line at beginning of taqmaster* 
@@ -14,7 +14,7 @@
 /2007.05.02 ftp trade cond is first non"@" char
 /(FTPday: taq*) (DVDmonth: *.tab *.idx *.bin) 1GB/min 
 if[~"1"~*.z.l 5;-1"license";exit 1];
-"kdb+taq 1.12 2015.07.15" 
+"kdb+taq 1.12 2015.07.24" 
 o:.Q.opt .z.x;if[2>#.Q.x;-1">q taq.k SRC DST [-corr] [-join] [-host [host]:port..] [-par]";exit 1]
 F:F@&(_F:!src:`$":",*.Q.x)like;S:0N!`/:src,;dst:`$":",.Q.x[1],"/taq"
 host:(`$":",)'o`host;corr:$[`corr in!o;::;{(x_`corr)[;&3>x`corr]}];e:("e"$%;%)`float in!o;s:~`join in!o;par:`par in!o
@@ -63,8 +63,8 @@ d4:{$[x<"I"$-8#$y;z,'(" ";4);z]};s#:".";sx:{x[`ex;&"Q"=x`ex]:"T";@[;`sym;{$[^y;x
 d5:{$[x<"I"$-8#$y;("T ";9 3),'1_'z,'(" ";32);z]}
 foo:{[t;tf;tt;tg;x]adsftg[0;(dst;"D"$-8#$x;t);(S x;+/tt 1;0);tf;tt;tg]}
 
-\t {foo[`quote;Qf;d5[20150802;x]d2[20131201;x]d4[20130201;x]d1[20120731;x]qt;qg]x}'F"taqquote*[0-9]";
-\t {foo[`trade;Tf;d5[20150802;x]                            d1[20060930;x]tt;tg]x}'F"taqtrade*[0-9]";
+\t {foo[`quote;Qf;d5[20150726;x]d2[20131201;x]d4[20130201;x]d1[20120731;x]qt;qg]x}'F"taqquote*[0-9]";
+\t {foo[`trade;Tf;d5[20150726;x]                            d1[20060930;x]tt;tg]x}'F"taqtrade*[0-9]";
 
 {if[x:@[<:;x;0];x"\\l .";>x]}'host
 \w

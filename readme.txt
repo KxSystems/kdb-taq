@@ -1,5 +1,5 @@
 Changes to kdb+taq
-2015.08.03 (version 1.12)
+2015.07.27 (version 1.12)
 timestamp precision extended from millisecond to microseconds (additional 3 digits ignored for now)
 ignore 3 additional fields participant timestamp, RRN and TRF
 http://www.nyxdata.com/nysedata/default.aspx?tabid=993&id=2784
