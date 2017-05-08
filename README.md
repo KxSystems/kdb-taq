@@ -60,3 +60,19 @@ Enabled to handle >2billion rows in input file. Use in combination with `-par` c
 ### 2010.08.19 
 Amend the file detection code to pick up the new file names (as well as the old ones)
 when NYSE changes the filenames for the FTP download on September 17th, 2010.
+
+
+## Hot linking from your application
+
+
+You are welcome to download and use this code according to the terms of the licence. 
+
+Kx Systems recommends you do not link your application to this repository, 
+which would expose your application to various risks:
+
+- This is not a high-availability hosting service
+- Updates to the repo may break your application 
+- Code refactoring might return 404s to your application
+
+Instead, download code and subject it to the version control and regression testing 
+you use for your application.
