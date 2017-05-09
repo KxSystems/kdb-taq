@@ -5,9 +5,11 @@
 ### 2016.10.18 (version 2.2 - jump in version number to sync with NYSE daily taq specs)
 support NYSE change to schema, format and datacentre as specified in:
 http://www.nyxdata.com/doc/247075
+
 taq.k reads the new data files, but saves data to the old schema, discarding 
 nano-second timestamp precision. It is a drop-in replacement for the previous
 version for those who don't want to move to the new schema yet.
+
 tq.q reads and exports ALL fields for trade, quote and nbbo 
 
 ### 2015.07.27 (version 1.12)
