@@ -1,21 +1,22 @@
-/2015.07.27 timestamps milli->micro, handle (ignore) additional participant timestamp, RRN, TRF 
-/ http://www.nyxdata.com/nysedata/default.aspx?tabid=993&id=2784
+/2016.10.19 support taq2.2a - maintaining old schema
+/ http://www.nyxdata.com/doc/247075
+/2015.07.27 timestamps milli->micro, handle (ignore) additional participant timestamp, RRN, TRF
+/ http:///www.nyxdata.com/nysedata/default.aspx?tabid=993&id=2784
 /2014.04.28 support additional exchange codes in master (12-15)
-/2014.01.15 discard info line at beginning of taqmaster* 
+/2014.01.15 discard info line at beginning of taqmaster*
 /2013.11.22 handle (ignore) new columns SIP,CTA for>20131130
-/2013.01.22 handle (ignore) new columns SSR,UTP,CQS,MPID for>20130201 
+/2013.01.22 handle (ignore) new columns SSR,UTP,CQS,MPID for>20130201
 / http://www.nyxdata.com/nysedata/default.aspx?tabid=993&id=1771
-/2012.07.31 handle (ignore) new column RPI 
+/2012.07.31 handle (ignore) new column RPI
 / http://www.nyxdata.com/nysedata/InformationProducts/tabid/73/Default.aspx
 /2011.10.17 uot(100i and 0 ..1000i for q2 and q3 compatibility)
 /2011.08.10 split at whole symbol when using -par
 /2011.08.07 >2 billion rows
-/2010.08.19 detect new ftp filenames 
+/2010.08.19 detect new ftp filenames
 /2007.05.02 ftp trade cond is first non"@" char
-/(FTPday: taq*) (DVDmonth: *.tab *.idx *.bin) 1GB/min 
-if[~"1"~*.z.l 5;-1"license";exit 1];
-"kdb+taq 1.12 2015.07.24" 
-o:.Q.opt .z.x;if[2>#.Q.x;-1">q taq.k SRC DST [-corr] [-join] [-host [host]:port..] [-par]";exit 1]
+/(FTPday: taq*) (DVDmonth: *.tab *.idx *.bin) 1GB/min
+"kdb+taq 2.2 2016.10.19"
+o:.Q.opt .z.x;if[2>#.Q.x;-1">q ",($.z.f)," SRC DST [-corr] [-join] [-host [host]:port..] [-par]";exit 1]
 F:F@&(_F:!src:`$":",*.Q.x)like;S:0N!`/:src,;dst:`$":",.Q.x[1],"/taq"
 host:(`$":",)'o`host;corr:$[`corr in!o;::;{(x_`corr)[;&3>x`corr]}];e:("e"$%;%)`float in!o;s:~`join in!o;par:`par in!o
 
@@ -29,7 +30,7 @@ V:{$["2"=*x:1_$x;1+"4"<x 3;0]}   /`out`issue N denom(AB3-8)/out (ind is missing 
 /FTP  http://www.nysedata.com/info/productDetail.asp?dpbid=13&page=1&dptID=48
 /\t {d:"D"$-8#$x;m:+`date`cusip`wi`sym`name`uot`ex`r!d,(" SB SSI I S ";1 9 1 15 15 60 1 54 2 2 6,6+78*d>2004.06.24)0:S x
 \t {d:"D"$-8#$x;m:(d>2010.11.10)_+`date`cusip`wi`sym`name`uot`ex`r!d,(" SB SSI I S ";1 9 1 15 15 60 1 54 2 2 6,6+78*d>2004.06.24)0:S x
-  if[s;m:@[m;`sym;{$[x=y;x;`$(n#x),".",(n:#$y)_x:$x]}';m`r]];ma@[;`ex;"TNBCIMPXTAW DZJKY"0|1+]@[;`uot;0 10 25 50 100 1000i]m}',/F'("taqmaster*[0-9]";"EQY_US_ALL_REF_MASTER_*[0-9]")
+  if[s;m:@[m;`sym;{$[x=y;x;`$(n#x),".",(n:#$y)_x:$x]}';m`r]];ma@[;`ex;"TNBCIMPXTAW DZJKY"0|1+]@[;`uot;0 10 25 50 100 1000i]m}'F"taqmaster*[0-9]"
 if[0N!#m;.[d;();:;m]]
 
 /p:.Q.par . dpt;0N!($p),": ",$m&:M;i::0;n::1000000;do[-_-m%n;@[p;`;$[a|i;,;:];.Q.en[d]@+g f!tw 1:(x;o+b*i;b*n&:m-i)];0N!i+:n];psym p}
@@ -65,6 +66,40 @@ foo:{[t;tf;tt;tg;x]adsftg[0;(dst;"D"$-8#$x;t);(S x;+/tt 1;0);tf;tt;tg]}
 
 \t {foo[`quote;Qf;d5[20150726;x]d2[20131201;x]d4[20130201;x]d1[20120731;x]qt;qg]x}'F"taqquote*[0-9]";
 \t {foo[`trade;Tf;d5[20150726;x]                            d1[20060930;x]tt;tg]x}'F"taqtrade*[0-9]";
+
+// taq 2.2a --- http://www.nyxdata.com/doc/247075
+
+s16:{f:$[#s;{x[&x=" "]:".";x};{x&~x=" "}];update`$Symbol from update Symbol:f'Symbol from x where Symbol like"* *"}
+sx2:{x[`ex;&"Q"=x`ex]:"T";x}; m:$[@!d:`/:dst,`mas;mf#0!. d;()]
+par2:{[d;p;t;C]`/:($[@!h:`/:d,`par.txt;`$":",h .q.mod[*(.q.xrank[hc::#h;.Q.A].Q.A?,C)+p;#h:0:h];d];`$$p;t)}
+tj:{"T"$9#'x}; nj:{"N"${(x,".:")[0 1 16 2 3 16 4 5 15 6 7 8 9 10 11 12 13 14]}'x}
+
+\t {d:"D"$-8#$x;m:+sx2`date`sym`name`cusip`ex`uot!d,.:+s16 -1_("*SS    C I                         ";,"|")0:S x
+  ma@[;`uot;0 10 25 50 100 1000i]update wi:0b from m}'F"eqy_us_all_ref_master_*[0-9]"
+if[0N!#m;.[d;();:;m]]
+
+adsftg2:{[a;dpt;xom;f;tw;g] d::*dpt;x::*xom
+  p:*`/:(,.Q.par . dpt),`;wf:$[(tt:`trade=dpt 2)|"A"=c:(|$x)9;:;,];wp:tt|"Z"=c
+  t:.Q.en[d]@+g f!.:+s16 -1_tw 0:x
+  if[par&tt;
+    0N!.[;();wf;].'+(!:;.:)@\:t@,/'=(&:'($t`sym)like/:.Q.A,'"*")!`/:'(k:par2 .'dpt,/:.Q.A),'`
+    :psym'?k]
+  if[par&~tt;
+    p:*`/:(,par2 . dpt,c),`; wf:$[c in .Q.A@&i:~~':.q.xrank[hc;.Q.A];:;,]; wp:c in .Q.A@&1_i,1b]
+  .[p;();wf;t];if[wp;psym p]}
+
+foo2:{[t;tf;tt;tg;x]adsftg2[0;(dst;"D"$-8#$x;t);(S x;0;0);tf;tt;tg]}
+
+Tf2:`time`ex`sym`cond`size`price`stop`corr
+tt2:("*C**IEBI       ";,"|")
+tg2:{corr(`sym,tf)#sx2@[@[x;`time;tj];`cond;{x(x in" @")?0b}']}
+Qf2:`time`ex`sym`bid`bsize`ask`asize`mode
+qt2:("*C*EIEIC              ";,"|")
+qg2:{(`sym,qf)#sx2@[x;`time;tj]}
+
+if[(#Q:F"splits_us_all_bbo_*[0-9]")within 1 25;-1"missing quote splits";exit 1]
+\t {foo2[`quote;Qf2;qt2;qg2]x}'.q.asc Q;
+\t {foo2[`trade;Tf2;tt2;tg2]x}'F"eqy_us_all_trade_[0-9]*";
 
 {if[x:@[<:;x;0];x"\\l .";>x]}'host
 \w

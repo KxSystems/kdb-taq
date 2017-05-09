@@ -1,33 +1,32 @@
-/2015.07.27 timestamps milli->micro, handle (ignore) additional participant timestamp, RRN, TRF
-/ http://www.nyxdata.com/nysedata/default.aspx?tabid=993&id=2784
-/2013.11.25 quote has 2 new field (+3, -1), nbbo has 2 new fields for>20131201
-/http://www.nyxdata.com/nysedata/Default.aspx?tabID=993&id=2194
-/2013.01.22 quote has 4 new fields, nbbo 2 new fields for>20130201
-/ http://www.nyxdata.com/nysedata/default.aspx?tabid=993&id=1771
-dst:`:tq
-F:key src:`$":",.z.x 0
-D:"I"$-8#string first F
+/2016.10.18 support taq2.2a
+/ http://www.nyxdata.com/doc/247075
 
-/ trade fields (types;widths)   trf after 200609
-tf:`time`ex`sym`s`cond`size`price`stop`corr`seq`cts`trf
-tt:($[20150726<D;"T ";"T"],"CSS*IFBIJCC ";$[20150726<D;9 3;9],1 6 10 4 9 11 1 2 16 1 1,1+(20060930<D)+32*20150726<D)
+if[(3.4>.z.K)|2016.09.26>.z.k;-1"kdb+ 3.4 more recent than 2016.09.26 required";exit 1];
+k)o:.Q.opt .z.x;F:F@&(_F:!src:`$":",*.Q.x)like;S:`/:src,;dst:`:tq;D:"I"$-8#$*F;
+if[1>count .Q.x;-1">q ",(string .z.f)," SRC";exit 1];
 
-/ quote fields (types;widths)
-qf:`time`ex`sym`s`bid`bsize`ask`asize`cond`mmid`bex`aex`seq`bbo`qbbo`corr`cqs /`rpi /`ssr`l0`l1`mpid/`sip`bboluld
-qt:($[20150726<D;"T ";"T"],"CSSFIFIC*CCJCCCC ";$[20150726<D;9 3;9],1 6 10 11 7 11 7 1 4 1 1 16 1 1 1 1,2+(20120731<D)+(4*20130201<D)+(2*20131202<D)+32*20150726<D)
+k)s16:{f:{x[&x=" "]:".";x};update`$Symbol from update Symbol:f'Symbol from x where Symbol like"* *"}
+k)psym:{if[^@[@[;`Symbol;`p#];x;`];0N!x@&~(x?x)=!#x@:&~=':x@:`Symbol]}
+k)adsftg2:{[a;dpt;xom;f;tw;g] d::*dpt;x::*xom
+  p:*`/:(,.Q.par . dpt),`;wf:$[(nqt:~`quote=dpt 2)|"A"=c:(|$x)9;:;,];wp:nqt|"Z"=c
+  t:.Q.en[d]@+g f!.:+s16 -1_tw 0:0N!x
+  .[p;();wf;t];if[wp;psym p]}
 
-/ nbbo fields (types;widths)
-nf:`time`ex`sym`s`bid`bsize`ask`asize`cond`mmid`bex`aex`seq`bbo`qbbo`corr`cqs`qcond`bbex`bbprice`bbsize`bbmmid`bbmmloc`bbmmdeskloc`baex`baprice`basize`bammid`bammloc`bammdeskloc /`l0`l1`sip
-nt:($[20150726<D;"T ";"T"],"CSSFIFIC*CCJCCCCCCFI*SCCFI*SC ";$[20150726<D;9 3;9],1 6 10 11 7 11 7 1 4 1 1 16 1 1 1 1 1 1 11 7 4 2 1 1 11 7 4 2 1,2+(2*20130201<D)+(1*20131202<D)+32*20150726<D) 
+k)foo2:{[t;tf;tt;tg;x]adsftg2[0;(dst;"D"$-8#$x;t);(S x;0;0);tf;tt;tg]}
 
-/ sym[.s] "e"$pricebidask 
-g:{[f;x]`sym`time xcols delete s from @[;`sym;{$[null y;x;` sv x,y]}';x`s]@[x;f;"e"$%;1e4]}
-foo:{[d;f;t;g;x]@[;`sym;`p#].Q.dsftg[(dst;"D"$-8#string x;d);(` sv src,x;sum t 1;0);f;t;g]}
+nh2:`Time`Exchange`Symbol`Bid_Price`Bid_Size`Offer_Price`Offer_Size`Quote_Condition`Sequence_Number`National_BBO_Ind`FINRA_BBO_Indicator`FINRA_ADF_MPID_Indicator`Quote_Cancel_Correction`Source_Of_Quote`NBBO_Quote_Condition`Best_Bid_Exchange`Best_Bid_Price`Best_Bid_Size`Best_Bid_FINRA_Market_Maker_ID`Best_Offer_Exchange`Best_Offer_Price`Best_Offer_Size`Best_Offer_FINRA_Market_Maker_ID`LULD_Indicator`LULD_NBBO_Indicator`SIP_Generated_Message_Identifier`Participant_Timestamp`FINRA_ADF_Timestamp;
+nf2:("NC*EHEHCIHHHCCCCEH*CFH*CCCNN";enlist"|"); ng2:{x};
 
-\t foo[`trade;tf;tt;g[`price]  ]each F where F like"taqtrade*[0-9]"
-\t foo[`quote;qf;qt;g[`bid`ask]]each F where F like"taqquote*[0-9]"
-\t foo[`nbbo ;nf;nt;g[`bid`ask]]each F where F like"taqnbbo*[0-9]"
+th2:`Time`Exchange`Symbol`SaleCondition`TradeVolume`TradePrice`TradeStopStockIndicator`TradeCorrectionIndicator`SequenceNumber`TradeId`SourceofTrade`TradeReportingFacility`ParticipantTimestamp`TradeReportingFacilityTRFTimestamp`TradeThroughExemptIndicator;
+tf2:("NC*SHEBHI*CBNNB";enlist"|"); tg2:{x};
+
+qh2:`Time`Exchange`Symbol`Bid_Price`Bid_Size`Offer_Price`Offer_Size`Quote_Condition`Sequence_Number`National_BBO_Ind`FINRA_BBO_Indicator`FINRA_ADF_MPID_Indicator`Quote_Cancel_Correction`Source_Of_Quote`Retail_Interest_Indicator`Short_Sale_Restriction_Indicator`LULD_BBO_Indicator`SIP_Generated_Message_Identifier`National_BBO_LULD_Indicator`Participant_Timestamp`FINRA_ADF_Timestamp`FINRA_ADF_Market_Participant_Quote_Indicator;
+qf2:("NC*EHFHCIHHCCCCCCCCNNC";enlist"|"); qg2:{x};
+
+if[(count Q:F"splits_us_all_bbo_*[0-9]")within 1 25;-1"missing quote splits";exit 1];
+\ts {foo2[`quote;qh2;qf2;qg2]x}each .q.asc Q;
+\ts {foo2[`trade;th2;tf2;tg2]x}each F"eqy_us_all_trade_[0-9]*";
+\ts {foo2[`nbbo; nh2;nf2;ng2]x}each F"eqy_us_all_nbbo_[0-9]*";
 
 \
 http://www.nyxdata.com/Data-Products/Daily-TAQ
-http://www.nyxdata.com/doc/185107
