@@ -1,3 +1,5 @@
+/2017.10.20 support taq3.0b - maintaining old schema 
+/ https://list.theice.com/t/92262/395348/57007/0/
 /2016.10.19 support taq2.2a - maintaining old schema
 / http://www.nyxdata.com/doc/247075
 /2015.07.27 timestamps milli->micro, handle (ignore) additional participant timestamp, RRN, TRF
@@ -15,7 +17,7 @@
 /2010.08.19 detect new ftp filenames
 /2007.05.02 ftp trade cond is first non"@" char
 /(FTPday: taq*) (DVDmonth: *.tab *.idx *.bin) 1GB/min
-"kdb+taq 2.2 2016.10.19"
+"kdb+taq 3.0 2017.10.20"
 o:.Q.opt .z.x;if[2>#.Q.x;-1">q ",($.z.f)," SRC DST [-corr] [-join] [-host [host]:port..] [-par]";exit 1]
 F:F@&(_F:!src:`$":",*.Q.x)like;S:0N!`/:src,;dst:`$":",.Q.x[1],"/taq"
 host:(`$":",)'o`host;corr:$[`corr in!o;::;{(x_`corr)[;&3>x`corr]}];e:("e"$%;%)`float in!o;s:~`join in!o;par:`par in!o
@@ -67,14 +69,15 @@ foo:{[t;tf;tt;tg;x]adsftg[0;(dst;"D"$-8#$x;t);(S x;+/tt 1;0);tf;tt;tg]}
 \t {foo[`quote;Qf;d5[20150726;x]d2[20131201;x]d4[20130201;x]d1[20120731;x]qt;qg]x}'F"taqquote*[0-9]";
 \t {foo[`trade;Tf;d5[20150726;x]                            d1[20060930;x]tt;tg]x}'F"taqtrade*[0-9]";
 
-// taq 2.2a --- http://www.nyxdata.com/doc/247075
+// taq 2.2a -- http://www.nyxdata.com/doc/247075
+// taq 3.0b -- https://list.theice.com/t/92262/395348/57007/0/ (starting 2017.11.06)
 
 s16:{f:$[#s;{x[&x=" "]:".";x};{x&~x=" "}];update`$Symbol from update Symbol:f'Symbol from x where Symbol like"* *"}
 sx2:{x[`ex;&"Q"=x`ex]:"T";x}; m:$[@!d:`/:dst,`mas;mf#0!. d;()]
 par2:{[d;p;t;C]`/:($[@!h:`/:d,`par.txt;`$":",h .q.mod[*(.q.xrank[hc::#h;.Q.A].Q.A?,C)+p;#h:0:h];d];`$$p;t)}
 tj:{"T"$9#'x}; nj:{"N"${(x,".:")[0 1 16 2 3 16 4 5 15 6 7 8 9 10 11 12 13 14]}'x}
 
-\t {d:"D"$-8#$x;m:+sx2`date`sym`name`cusip`ex`uot!d,.:+s16 -1_("*SS    C I                         ";,"|")0:S x
+\t {d:"D"$-8#$x;m:+sx2`date`sym`name`cusip`ex`uot!d,.:+s16 -1_("*SS    C I                         ",$[d>2017.11.05;" ";""];,"|")0:S x
   ma@[;`uot;0 10 25 50 100 1000i]update wi:0b from m}'F"eqy_us_all_ref_master_*[0-9]"
 if[0N!#m;.[d;();:;m]]
 
@@ -95,10 +98,11 @@ tt2:("*C**IEBI       ";,"|")
 tg2:{corr(`sym,tf)#sx2@[@[x;`time;tj];`cond;{x(x in" @")?0b}']}
 Qf2:`time`ex`sym`bid`bsize`ask`asize`mode
 qt2:("*C*EIEIC              ";,"|")
+qt3:("*C*EIEIC               ";,"|")
 qg2:{(`sym,qf)#sx2@[x;`time;tj]}
 
 if[(#Q:F"splits_us_all_bbo_*[0-9]")within 1 25;-1"missing quote splits";exit 1]
-\t {foo2[`quote;Qf2;qt2;qg2]x}'.q.asc Q;
+\t {foo2[`quote;Qf2;$[2017.11.05<"D"$-8#$x;qt3;qt2];qg2]x}'.q.asc Q;
 \t {foo2[`trade;Tf2;tt2;tg2]x}'F"eqy_us_all_trade_[0-9]*";
 
 {if[x:@[<:;x;0];x"\\l .";>x]}'host

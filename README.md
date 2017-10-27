@@ -2,6 +2,10 @@
 
 ## Changes to kdb+taq
 
+### 2017.10.27 (version 3.0 - jump in version number to sync with NYSE daily taq version 3.0b)
+support NYSE change to schema as specified in:
+https://list.theice.com/t/92262/395348/57007/0/
+
 ### 2016.10.18 (version 2.2 - jump in version number to sync with NYSE daily taq specs)
 support NYSE change to schema, format and datacentre as specified in:
 http://www.nyxdata.com/doc/247075
