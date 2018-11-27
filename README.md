@@ -2,6 +2,10 @@
 
 ## Changes to kdb+taq
 
+### 2018.10.05 
+small changes to field load types (mostly just wider) - see before/after
+versions of nf2, tf2, qf2 
+
 ### 2017.10.27 (version 3.0 - jump in version number to sync with NYSE daily taq version 3.0b)
 support NYSE change to schema as specified in:
 https://list.theice.com/t/92262/395348/57007/0/

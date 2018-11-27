@@ -1,3 +1,4 @@
+/2018.10.05 support taq 3.0 nov2017, changes to some field types (see nf2,tf2, qf2)  
 /2017.10.20 support taq3.0b
 / https://list.theice.com/t/92262/395348/57007/0/
 /2016.10.18 support taq2.2a
@@ -22,10 +23,12 @@ nf2:("NC*EHEHCIHHHCCCCEH*CFH*CCCNN";enlist"|"); ng2:{x};
 / 3.0
 nh2:`Time`Exchange`Symbol`Bid_Price`Bid_Size`Offer_Price`Offer_Size`Quote_Condition`Sequence_Number`National_BBO_Ind`FINRA_BBO_Indicator`FINRA_ADF_MPID_Indicator`Quote_Cancel_Correction`Source_Of_Quote`BestBidQuoteCondition`Best_Bid_Exchange`Best_Bid_Price`Best_Bid_Size`Best_Bid_FINRA_Market_Maker_ID`Best_Offer_Quote_Condition`Best_Offer_Exchange`Best_Offer_Price`Best_Offer_Size`Best_Offer_FINRA_Market_Maker_ID`LULD_Indicator`LULD_NBBO_Indicator`SIP_Generated_Message_Identifier`Participant_Timestamp`FINRA_ADF_Timestamp`Security_Status_Indicator
 nf2:("NC*EHEHCIHHHCCCCEH*CCFH*CCCNNC";enlist"|"); ng2:{x};
+nf2:("NC*EIEICICCHCCCCEI*CCFI*CCCNNC";enlist"|"); ng2:{x};
 
 / 2.2 and 3.0
 th2:`Time`Exchange`Symbol`SaleCondition`TradeVolume`TradePrice`TradeStopStockIndicator`TradeCorrectionIndicator`SequenceNumber`TradeId`SourceofTrade`TradeReportingFacility`ParticipantTimestamp`TradeReportingFacilityTRFTimestamp`TradeThroughExemptIndicator;
 tf2:("NC*SHEBHI*CBNNB";enlist"|"); tg2:{x};
+tf2:("NC*SIEBHI*CBNNB";enlist"|"); tg2:{x};
 
 / 2.2
 qh2:`Time`Exchange`Symbol`Bid_Price`Bid_Size`Offer_Price`Offer_Size`Quote_Condition`Sequence_Number`National_BBO_Ind`FINRA_BBO_Indicator`FINRA_ADF_MPID_Indicator`Quote_Cancel_Correction`Source_Of_Quote`Retail_Interest_Indicator`Short_Sale_Restriction_Indicator`LULD_BBO_Indicator`SIP_Generated_Message_Identifier`National_BBO_LULD_Indicator`Participant_Timestamp`FINRA_ADF_Timestamp`FINRA_ADF_Market_Participant_Quote_Indicator;
@@ -33,6 +36,7 @@ qf2:("NC*EHFHCIHHCCCCCCCCNNC";enlist"|"); qg2:{x};
 / 3.0
 qh2:`Time`Exchange`Symbol`Bid_Price`Bid_Size`Offer_Price`Offer_Size`Quote_Condition`Sequence_Number`National_BBO_Ind`FINRA_BBO_Indicator`FINRA_ADF_MPID_Indicator`Quote_Cancel_Correction`Source_Of_Quote`Retail_Interest_Indicator`Short_Sale_Restriction_Indicator`LULD_BBO_Indicator`SIP_Generated_Message_Identifier`National_BBO_LULD_Indicator`Participant_Timestamp`FINRA_ADF_Timestamp`FINRA_ADF_Market_Participant_Quote_Indicator`Security_Status_Indicator
 qf2:("NC*EHFHCIHHCCCCCCCCNNCC";enlist"|"); qg2:{x};
+qf2:("NC*EIFICICCCCCCCCCCNNCC";enlist"|"); qg2:{x};
 
 if[(count Q:F"splits_us_all_bbo_*[0-9]")within 1 25;-1"missing quote splits";exit 1];
 \ts {foo2[`quote;qh2;qf2;qg2]x}each .q.asc Q;
