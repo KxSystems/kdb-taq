@@ -2,6 +2,10 @@
 
 ## Changes to kdb+taq
 
+### 2020.04.15 (version 3.2 - sync with NYSE daily taq version 3.2)
+handle (ignore) additional flag TradedOnLTSE in master file
+https://www.nyse.com/publicdocs/nyse/data/Daily_TAQ_Client_Spec_v3.2.pdf
+
 ### 2018.10.05 
 small changes to field load types (mostly just wider) - see before/after
 versions of nf2, tf2, qf2 

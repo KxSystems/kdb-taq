@@ -1,3 +1,4 @@
+/2020.04.15 support taq 3.2, add field to MASTER, no change needed
 /2018.10.05 support taq 3.0 nov2017, changes to some field types (see nf2,tf2, qf2)  
 /2017.10.20 support taq3.0b
 / https://list.theice.com/t/92262/395348/57007/0/
@@ -37,6 +38,7 @@ qf2:("NC*EHFHCIHHCCCCCCCCNNC";enlist"|"); qg2:{x};
 qh2:`Time`Exchange`Symbol`Bid_Price`Bid_Size`Offer_Price`Offer_Size`Quote_Condition`Sequence_Number`National_BBO_Ind`FINRA_BBO_Indicator`FINRA_ADF_MPID_Indicator`Quote_Cancel_Correction`Source_Of_Quote`Retail_Interest_Indicator`Short_Sale_Restriction_Indicator`LULD_BBO_Indicator`SIP_Generated_Message_Identifier`National_BBO_LULD_Indicator`Participant_Timestamp`FINRA_ADF_Timestamp`FINRA_ADF_Market_Participant_Quote_Indicator`Security_Status_Indicator
 qf2:("NC*EHFHCIHHCCCCCCCCNNCC";enlist"|"); qg2:{x};
 qf2:("NC*EIFICICCCCCCCCCCNNCC";enlist"|"); qg2:{x};
+/ 3.2
 
 if[(count Q:F"splits_us_all_bbo_*[0-9]")within 1 25;-1"missing quote splits";exit 1];
 \ts {foo2[`quote;qh2;qf2;qg2]x}each .q.asc Q;
