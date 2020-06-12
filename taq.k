@@ -1,5 +1,6 @@
-/2020.04.15 support taq3.2 - add TradedOnLTSE to master 
-/2017.10.20 support taq3.0b - maintaining old schema 
+/2020.06.12 support taq3.3 - add TradedOnMEMX and TradedOnMIAX to master
+/2020.04.15 support taq3.2 - add TradedOnLTSE to master
+/2017.10.20 support taq3.0b - maintaining old schema
 / https://list.theice.com/t/92262/395348/57007/0/
 /2016.10.19 support taq2.2a - maintaining old schema
 / http://www.nyxdata.com/doc/247075
@@ -79,7 +80,7 @@ sx2:{x[`ex;&"Q"=x`ex]:"T";x}; m:$[@!d:`/:dst,`mas;mf#0!. d;()]
 par2:{[d;p;t;C]`/:($[@!h:`/:d,`par.txt;`$":",h .q.mod[*(.q.xrank[hc::#h;.Q.A].Q.A?,C)+p;#h:0:h];d];`$$p;t)}
 tj:{"T"$9#'x}; nj:{"N"${(x,".:")[0 1 16 2 3 16 4 5 15 6 7 8 9 10 11 12 13 14]}'x}
 
-\t {d:"D"$-8#$x;m:+sx2`date`sym`name`cusip`ex`uot!d,.:+s16 -1_("*SS    C I                         ",$[d>2017.11.05;" ";""],$[d>2020.04.16;" ";""];,"|")0:S x
+\t {d:"D"$-8#$x;m:+sx2`date`sym`name`cusip`ex`uot!d,.:+s16 -1_("*SS    C I                         ",$[d>2017.11.05;" ";""],$[d>2020.04.16;" ";""],$[d>2020.07.23;"  ";""];,"|")0:S x
   ma@[;`uot;0 10 25 50 100 1000i]update wi:0b from m}'F"eqy_us_all_ref_master_*[0-9]"
 if[0N!#m;.[d;();:;m]]
 

@@ -1,5 +1,6 @@
+/2020.06.12 support taq 3.3, add field to MASTER, no change needed
 /2020.04.15 support taq 3.2, add field to MASTER, no change needed
-/2018.10.05 support taq 3.0 nov2017, changes to some field types (see nf2,tf2, qf2)  
+/2018.10.05 support taq 3.0 nov2017, changes to some field types (see nf2,tf2, qf2)
 /2017.10.20 support taq3.0b
 / https://list.theice.com/t/92262/395348/57007/0/
 /2016.10.18 support taq2.2a
@@ -39,6 +40,7 @@ qh2:`Time`Exchange`Symbol`Bid_Price`Bid_Size`Offer_Price`Offer_Size`Quote_Condit
 qf2:("NC*EHFHCIHHCCCCCCCCNNCC";enlist"|"); qg2:{x};
 qf2:("NC*EIFICICCCCCCCCCCNNCC";enlist"|"); qg2:{x};
 / 3.2
+/ 3.3
 
 if[(count Q:F"splits_us_all_bbo_*[0-9]")within 1 25;-1"missing quote splits";exit 1];
 \ts {foo2[`quote;qh2;qf2;qg2]x}each .q.asc Q;
