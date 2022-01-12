@@ -1,3 +1,4 @@
+/2022.01.06 changing quote::Bid_Price from real to float
 /2020.06.12 support taq 3.3, add field to MASTER, no change needed
 /2020.04.15 support taq 3.2, add field to MASTER, no change needed
 /2018.10.05 support taq 3.0 nov2017, changes to some field types (see nf2,tf2, qf2)
@@ -37,8 +38,8 @@ qh2:`Time`Exchange`Symbol`Bid_Price`Bid_Size`Offer_Price`Offer_Size`Quote_Condit
 qf2:("NC*EHFHCIHHCCCCCCCCNNC";enlist"|"); qg2:{x};
 / 3.0
 qh2:`Time`Exchange`Symbol`Bid_Price`Bid_Size`Offer_Price`Offer_Size`Quote_Condition`Sequence_Number`National_BBO_Ind`FINRA_BBO_Indicator`FINRA_ADF_MPID_Indicator`Quote_Cancel_Correction`Source_Of_Quote`Retail_Interest_Indicator`Short_Sale_Restriction_Indicator`LULD_BBO_Indicator`SIP_Generated_Message_Identifier`National_BBO_LULD_Indicator`Participant_Timestamp`FINRA_ADF_Timestamp`FINRA_ADF_Market_Participant_Quote_Indicator`Security_Status_Indicator
-qf2:("NC*EHFHCIHHCCCCCCCCNNCC";enlist"|"); qg2:{x};
-qf2:("NC*EIFICICCCCCCCCCCNNCC";enlist"|"); qg2:{x};
+qf2:("NC*FHFHCIHHCCCCCCCCNNCC";enlist"|"); qg2:{x};
+qf2:("NC*FIFICICCCCCCCCCCNNCC";enlist"|"); qg2:{x};
 / 3.2
 / 3.3
 
