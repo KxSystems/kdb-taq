@@ -93,6 +93,8 @@ when NYSE changes the filenames for the FTP download on September 17th, 2010.
 
 ## Hot linking from your application
 
+## Making changes to README.MD
+
 
 You are welcome to download and use this code according to the terms of the licence.
 
