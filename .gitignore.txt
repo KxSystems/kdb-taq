@@ -1,0 +1,6 @@
+dbmaint.q
+quote.txt
+README.md
+sym.q
+trade.txt
+util.q
