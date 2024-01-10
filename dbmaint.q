@@ -1,3 +1,6 @@
+/Following comment added Wed 10 Jan 2024 17:56
+/Making changes to scripts in kdb-taq to test staging/committing changes with git
+
 / kdb+ partitioned database maintenance
 \d .os
 WIN:.z.o in`w32`w64
