@@ -3,6 +3,9 @@
 //         Overwrite of Logging Library             //
 //                                                  //
 //////////////////////////////////////////////////////
+/Following comment added on Wed 10 Jan 18:02
+/This is the second edit of the second commit
+
 .log.initialised:0b;
 .log.info:{.log.conn@"\n","Info Log @ ",string[.z.Z]," ",("[",";" sv string value .Q.w[]),"]: ",x;};
 .log.error:{.log.conn@"\n","Error Log @ ",string[.z.Z]," ",("[",";" sv string value .Q.w[]),"]: ",x;};

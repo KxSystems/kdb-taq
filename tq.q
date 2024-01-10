@@ -1,3 +1,6 @@
+/Following comment added on Wed 10 Jan 18:02
+/This is the first edit of a second commit
+
 /2022.01.06 changing quote::Bid_Price from real to float
 /2020.06.12 support taq 3.3, add field to MASTER, no change needed
 /2020.04.15 support taq 3.2, add field to MASTER, no change needed
