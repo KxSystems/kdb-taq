@@ -1,107 +1,130 @@
 # kdb+taq
 
-## Changes to kdb+taq
+kdb-taq is a tool for processing and analyzing historical NYSE Daily TAQ (Trade and Quote) data using kdb+/q. This repository contains scripts and utilities to parse, load, and query TAQ datasets efficiently.
 
-### 2022.01.06 (`Bid_Price` type fix in tq.q)
-changing `Bid_Price` from real to float to avoid `Bid_Price`, `Offer_Price` type inconsistency
+## Prerequisites
 
-### 2020.06.12 (version 3.3 - sync with NYSE daily taq version 3.3)
-handle (ignore) additional flags TradedOnMEMX and TradedOnMIAX in master file
-https://www.nyse.com/publicdocs/nyse/data/Daily_TAQ_Client_Spec_v3.3.pdf
+- [kdb+](https://kx.com/kdb-personal-edition-download/) installed on your machine
+- NYSE Daily TAQ files from [ftp.nyse.com](ftp.nyse.com)
 
-### 2020.04.15 (version 3.2 - sync with NYSE daily taq version 3.2)
-handle (ignore) additional flag TradedOnLTSE in master file
-https://www.nyse.com/publicdocs/nyse/data/Daily_TAQ_Client_Spec_v3.2.pdf
+## Getting Started
 
-### 2018.10.05
-small changes to field load types (mostly just wider) - see before/after
-versions of nf2, tf2, qf2
+Follow the steps below to set up and process a TAQ file:
 
-### 2017.10.27 (version 3.0 - jump in version number to sync with NYSE daily taq version 3.0b)
-support NYSE change to schema as specified in:
-https://list.theice.com/t/92262/395348/57007/0/
+### 1. Download a Sample TAQ File
 
-### 2016.10.18 (version 2.2 - jump in version number to sync with NYSE daily taq specs)
-support NYSE change to schema, format and datacentre as specified in:
-http://www.nyxdata.com/doc/247075
+Obtain TAQ data files from the NYSE FTP link. For example:
 
-taq.k reads the new data files, but saves data to the old schema, discarding
-nano-second timestamp precision. It is a drop-in replacement for the previous
-version for those who don't want to move to the new schema yet.
+```
+wget https://ftp.nyse.com/Historical%20Data%20Samples/DAILY%20TAQ/EQY_US_ALL_TRADE_20240702.gz
+```
 
-tq.q reads and exports ALL fields for trade, quote and nbbo
+These files are ~2GB each so may take significant time to download.
 
-### 2015.07.27 (version 1.12)
-Timestamp precision extended from millisecond to microseconds (additional 3 digits ignored for now).
-Ignore 3 additional fields participant timestamp, RRN and TRF
-http://www.nyxdata.com/nysedata/default.aspx?tabid=993&id=2784
+### 2. Clone the Repository
 
-### 2014.04.28 (version 1.11)
-Support additional exchange codes (12-15 - ZJKY) in taqmaster
+Clone the kdb-taq repository to your server:
 
-### 2014.01.15 (version 1.10)
-Amend taq.k to discard the first line of taqmaster* when it is just lists the record count
+```
+git clone https://github.com/KxSystems/kdb-taq.git
+cd kdb-taq
+```
 
-### 2013.11.25 (version 1.9)
-Amend taq.k and tq.q to recognise and ignore the new quote fields:
-- SIP-generated Message Identifier
-- National BBO LULD Indicator
-tq.q to recognise and ignore the new NBBO fields:
-- Limit-Up/Limit-Down Indicator
-- Limit-up/Limit-down NBBO Indicator
-- SIP-generated Message Identifier
-and handle deletion of previous NBBO fields:
-- Limit-Up/Limit-Down NBBO (UTP) Indicator
-- Limit-Up/Limit-Down NBBO (CQS) Indicator
+### 3. Prepare the Data
 
-The format change is scheduled to take effect from 2nd December 2013
-see:
-http://www.nyxdata.com/nysedata/Default.aspx?tabID=993&id=2194
+Create a source directory and move the downloaded TAQ file to this and decompress it:
 
-### 2013.01.22 (version 1.8)
-Amended taq.k and tq.q to recognise and ignore the new quote fields:
-- Short Sale Restriction (SSR) Indicator
-- Limit-Up/Limit-Down BBO (UTP) Indicator
-- Limit-Up/Limit-Down BBO (CQS) Indicator
-- FINRA ADF MPID Indicator
-and tq.q to recognise and ignore the new NBBO fields:
-- Limit-Up/Limit-Down NBBO (UTP) Indicator
-- Limit-Up/Limit-Down NBBO (CQS) Indicator
+```
+mkdir SRC
+mv /path/to/EQY_US_ALL_TRADE_20240702.gz SRC/
+gzip -d SRC/*
+```
 
-The format change is scheduled to take effect from 1st February 2013
-see:
-http://www.nyxdata.com/nysedata/default.aspx?tabid=993&id=1771
-http://www.nyxdata.com/doc/185107
+### 4. Process the TAQ Data
 
-### 2012.07.31 (version 1.7)
-Amended taq.k and tq.q to recognise (and ignore) the new Quote field RPI (Retail Interest Indicator)
+Run the tq.q script to process the data. Replace SRC with the full path to the source directory if necessary:
+```
+q tq.q -s 8 SRC
+```
 
-### 2011.10.07
-Added tq.q as example of how to load more fields from the FTP files.
-taq.k is unchanged.
+The -s option specifies the number of threads (optional).
 
-### 2011.08.11
-Adjust partitioning used with -par to split at a whole symbol – so any particular symbol will only be in one partition.
+### 5. Load the Processed Data
 
-### 2011.08.07
-Enabled to handle >2billion rows in input file. Use in combination with `-par` cmd line option and par.txt
+Load the data into the kdb+ environment:
+```
+q)\l tq
+```
 
-### 2010.08.19
-Amend the file detection code to pick up the new file names (as well as the old ones)
-when NYSE changes the filenames for the FTP download on September 17th, 2010.
+### 6. Query the Data
 
+You can now query the loaded data. For example runnning `meta` to see the table schema and datatypes:
 
-## Hot linking from your application
+```
+q)meta trade
 
+c                                 | t f a
+----------------------------------| -----
+date                              | d    
+Time                              | n    
+Exchange                          | c    
+Symbol                            | s   p
+SaleCondition                     | s    
+TradeVolume                       | i    
+TradePrice                        | e    
+TradeStopStockIndicator           | b    
+TradeCorrectionIndicator          | h    
+SequenceNumber                    | i    
+TradeId                           | C    
+SourceofTrade                     | c    
+TradeReportingFacility            | b    
+ParticipantTimestamp              | n    
+TradeReportingFacilityTRFTimestamp| n    
+TradeThroughExemptIndicator       | b   
+```
+And run aggregations on the data, for example get the number of trades and the max prices for each hour:
+```
+q)select numTrade:count i,maxPrice:max TradePrice by Time.hh from trade
+
+hh| numTrade maxPrice
+--| -------------------
+1 | 14019    15.0399   
+2 | 28475    15.04391  
+3 | 28535    15.04839  
+4 | 194690   7465      
+5 | 122619   3880      
+6 | 117835   7475      
+7 | 281648   7460      
+8 | 676191   7458.8    
+9 | 7657888  611225.6  
+10| 11303243 611071.8  
+11| 8726594  610600    
+12| 7114388  610980    
+13| 7039454  611065    
+14| 7512397  611679.9  
+15| 16510252 613149.4  
+16| 385603   612600.2  
+17| 145800   7460      
+18| 121943   610668    
+19| 96918    610668    
+20| 6655     8662.955
+
+```
+
+## Changelog
+Detailed update history can be found in [CHANGELOG.md](CHANGELOG.md).
+
+## Best Practices for Integration
 
 You are welcome to download and use this code according to the terms of the licence.
 
-Kx Systems recommends you do not link your application to this repository,
+[KX](kx.com) recommends you do not link your application to this repository,
 which would expose your application to various risks:
 
 - This is not a high-availability hosting service
 - Updates to the repo may break your application
 - Code refactoring might return 404s to your application
 
+### Recommendation:
 Instead, download code and subject it to the version control and regression testing
 you use for your application.
