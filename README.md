@@ -5,7 +5,7 @@ kdb-taq is a tool for processing and analyzing historical NYSE Daily TAQ (Trade 
 ## Prerequisites
 
 - [kdb+](https://kx.com/kdb-personal-edition-download/) installed on your machine
-- NYSE Daily TAQ files from [ftp.nyse.com](ftp.nyse.com)
+- NYSE Daily TAQ files from [ftp.nyse.com](https://ftp.nyse.com//Historical%20Data%20Samples/DAILY%20TAQ/)
 
 ## Getting Started
 
