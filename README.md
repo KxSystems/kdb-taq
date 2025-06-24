@@ -46,7 +46,7 @@ gzip -d SRC/*
 Run the `tq.q` script to process the data. Replace `SRC` with the full path to the source directory if necessary:
 
 ```bash
-$ q tq.q -s 8 SRC
+q tq.q -s 8 SRC
 ```
 
 The `-s` option specifies the number of threads (optional).
