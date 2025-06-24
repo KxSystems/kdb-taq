@@ -5,7 +5,7 @@ kdb-taq is a tool for processing and analyzing historical NYSE Daily TAQ (Trade 
 ## Prerequisites
 
 - [kdb+](https://kx.com/kdb-personal-edition-download/) installed on your machine
-- NYSE Daily TAQ files from [ftp.nyse.com](ftp.nyse.com)
+- NYSE Daily TAQ files from [ftp.nyse.com](https://ftp.nyse.com/Historical%20Data%20Samples/DAILY%20TAQ/)
 
 ## Getting Started
 
@@ -15,8 +15,9 @@ Follow the steps below to set up and process a TAQ file:
 
 Obtain TAQ data files from the NYSE FTP link. For example:
 
-```
-wget https://ftp.nyse.com/Historical%20Data%20Samples/DAILY%20TAQ/EQY_US_ALL_TRADE_20240702.gz
+```bash
+export DATE=$(curl -s https://ftp.nyse.com/Historical%20Data%20Samples/DAILY%20TAQ/| grep -oE 'EQY_US_ALL_TRADE_2[0-9]{7}' | grep -oE '2[0-9]{7}'|head -1)
+wget https://ftp.nyse.com/Historical%20Data%20Samples/DAILY%20TAQ/EQY_US_ALL_TRADE_$DATE.gz
 ```
 
 These files are ~2GB each so may take significant time to download.
@@ -25,7 +26,7 @@ These files are ~2GB each so may take significant time to download.
 
 Clone the kdb-taq repository to your server:
 
-```
+```bash
 git clone https://github.com/KxSystems/kdb-taq.git
 cd kdb-taq
 ```
@@ -34,25 +35,27 @@ cd kdb-taq
 
 Create a source directory and move the downloaded TAQ file to this and decompress it:
 
-```
+```bash
 mkdir SRC
-mv /path/to/EQY_US_ALL_TRADE_20240702.gz SRC/
+mv /path/to/EQY_US_ALL_TRADE_$DATE.gz SRC/
 gzip -d SRC/*
 ```
 
 ### 4. Process the TAQ Data
 
-Run the tq.q script to process the data. Replace SRC with the full path to the source directory if necessary:
-```
+Run the `tq.q` script to process the data. Replace `SRC` with the full path to the source directory if necessary:
+
+```bash
 q tq.q -s 8 SRC
 ```
 
-The -s option specifies the number of threads (optional).
+The `-s` option specifies the number of threads (optional).
 
 ### 5. Load the Processed Data
 
 Load the data into the kdb+ environment:
-```
+
+```bash
 q)\l tq
 ```
 
@@ -60,7 +63,7 @@ q)\l tq
 
 You can now query the loaded data. For example runnning `meta` to see the table schema and datatypes:
 
-```
+```q
 q)meta trade
 
 c                                 | t f a
@@ -82,8 +85,10 @@ ParticipantTimestamp              | n
 TradeReportingFacilityTRFTimestamp| n    
 TradeThroughExemptIndicator       | b   
 ```
+
 And run aggregations on the data, for example get the number of trades and the max prices for each hour:
-```
+
+```q
 q)select numTrade:count i,maxPrice:max TradePrice by Time.hh from trade
 
 hh| numTrade maxPrice
