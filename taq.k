@@ -97,8 +97,10 @@ adsftg2:{[a;dpt;xom;f;tw;g] d::*dpt;x::*xom
 foo2:{[t;tf;tt;tg;x]adsftg2[0;(dst;"D"$-8#$x;t);(S x;0;0);tf;tt;tg]}
 
 Tf2:`time`ex`sym`cond`size`price`stop`corr
-tt2:("*C**IEBI       ";,"|")
-tg2:{corr(`sym,tf)#sx2@[@[x;`time;tj];`cond;{x(x in" @")?0b}']}
+tt2:("*C**FEBI       ";,"|")
+// ver 4.2: * add new column `sizef` of type float
+//          * round size down except if value is between 0 and 1, in which case round up to 1
+tg2:{.q.flip![;enlist(within;`sizef;0 1);0b;enlist[`size]!enlist(+;`size;1)]![;();0b;`size`sizef!(("i"$;(_:; `size));`size)].q.flip corr(`sym,tf)#sx2@[@[x;`time;tj];`cond;{x(x in" @")?0b}']}
 Qf2:`time`ex`sym`bid`bsize`ask`asize`mode
 qt2:("*C*EIEIC              ";,"|")
 qt3:("*C*EIEIC               ";,"|")
